@@ -6,15 +6,39 @@ service: clinicaMedica
 provider:
   name: aws
   runtime: nodejs20.x
+  iam: #permissões
+    role:
+      statements: 
+        - Effect: Allow 
+          Action: 
+            - dynamodb:* #Permissão total para o DynamoDB
+          Resource: "*" 
 
 functions:
-  hello:
-    handler: handler.hello
+  #Patients
+  patientsCreate:
+    handler: src/patients/functions/create.handler
+    #Ao usar ${sls:stage}, o nome final da função será prefixado com o valor do stage atual.
+    name: ${sls:stage}-patients-create
     events:
       - httpApi:
-          path: /
+          method: post
+          path: /patients
+  findAllPatients:
+    handler: src/patients/functions/find.findAllHandler
+    name: ${sls:stage}-patients-findAll
+    events:
+      - httpApi:
           method: get
-
+          path: /patients
+  findPatientById:
+    handler: src/patients/functions/find.findByIdHandler
+    name: ${sls:stage}-patients-findById
+    events:
+      - httpApi:
+          method: get
+          path: /patients/{id}
+          
 resources:
   Resources:
     patientsTable:
