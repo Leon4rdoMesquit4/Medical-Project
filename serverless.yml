@@ -38,6 +38,20 @@ functions:
       - httpApi:
           method: get
           path: /patients/{id}
+  removePatient:
+    handler: src/patients/functions/remove.removeHandler
+    name: ${sls:stage}-patients-remove
+    events:
+      - httpApi:
+          method: delete
+          path: /patients/{id}
+  updatePatient:
+    handler: src/patients/functions/patch.updateHandler
+    name: ${sls:stage}-patients-update
+    events:
+      - httpApi:
+          method: patch
+          path: /patients/{id}
           
 resources:
   Resources:

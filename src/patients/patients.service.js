@@ -31,8 +31,34 @@ async function findPatientById(id) {
     return result;
 }
 
+async function removePatientById(id) {
+    const result = await PatientModel.delete({PK: `PATIENT#${id}`});
+
+    return result;
+}
+
+async function updatePatientById(id, payload) {
+    const patient = await PatientModel.get({id});
+
+    if (!patient) {
+        return null;
+    }
+
+    const updatedPatient = {
+        ...payload,
+        PK: `PATIENT#${id}`,
+    };
+
+    const result = await PatientModel.update({id}, updatedPatient);
+    result.PK = undefined;
+
+    return result;
+}
+
 export default {
     createPatient,
     findAllPatients, 
-    findPatientById
+    findPatientById,
+    removePatientById,
+    updatePatientById
 }
